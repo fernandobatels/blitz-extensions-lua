@@ -168,3 +168,18 @@ function sleep(s)
 	repeat until os.time() > ntime
 end
 
+function table.index_of(self, val)
+	for index, value in pairs(self) do
+		--~ print(index, value, val, value == val, type(val), type(value), #value, #val)
+		if value == val then
+			return index
+		end
+	end
+
+	return 0
+end
+
+function table.contains(self, val)
+	return table.index_of(self, val) > 0
+end
+
