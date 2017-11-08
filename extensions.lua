@@ -1,7 +1,7 @@
-
 --  Extensions from lua api - Blitz Extensions
---  Copyright (C) 2016 - Fernando Batels <luisfbatels@gmail.com>
+--  Copyright (C) 2017 - Fernando Batels <luisfbatels@gmail.com>
 
+-- Split string by separator
 function string:split(separator, max, b_regexp)
 	assert(separator ~= '')
 	assert(max == nil or max >= 1)
@@ -27,78 +27,76 @@ function string:split(separator, max, b_regexp)
 	return r
 end
 
-function string:i_split(separator, max, b_regexp)
-	local r = {}
-	
-	local counter = 1
-	for k, v in pairs(self:lower():split(separator:lower(), max, b_regexp)) do
-		
-		table.insert(r, self:sub(counter, counter + v:length() - 1))
-		counter = counter + v:length() + separator:length()
-	end
-	
-	return r
-end
-
+-- Return if string contains the paramter string
 function string:contains(sub)
 	return self:find(sub, nil, true) ~= nil
 end
 
+-- Trim string
 function string:trim()
 	return self:match('^%s*(.-)%s*$')
 end
 
-function string:remove_multispaces()
+-- Remote multiple spaces and tri, string
+function string:removemultispaces()
 	return self:gsub('%s+', ' '):trim()
 end
 
+-- Return size of string
 function string:length()
 	return #self
 end
 
-function string:starts_with(substr)
+-- Return if string starts with paramter
+function string:startswith(substr)
 	return self:sub(1, #substr) == substr
 end
 
-function string:ends_with(substr)
+-- Return if string ends with paramter
+function string:endswith(substr)
 	return self:sub(-#substr) == substr
 end
 
+-- Append paramter to string
 function string:append(post)
 	return self..post
 end
 
-
-function string:uc_first()
+-- Upercase first char
+function string:ucfirst()
 	return self:sub(1, 1):upper()..self:sub(2)
 end
 
-function string:uc_lower()
+-- Lowercase first char
+function string:uclower()
 	return self:sub(1, 1):lower()..self:sub(2)
 end
 
+-- Captalize the string
 function string:capitalize()
 	local res = {}
 	
 	self = self:lower()
 
 	for _, val in ipairs(self:split(' ')) do
-		res[#res + 1] = val:uc_first()
+		res[#res + 1] = val:ucfirst()
 	end
 
 	return table.concat(res, ' ')
 end
 
-
-function string:is_empty()
+-- Return if string is empty
+function string:isempty()
 	return self == ''
 end
 
+-- Replace ocurrences on string
 function string:replace(from, to)
 
 	return self:gsub(from, to)
 end
 
+-- Check if file exists
 function io.exists(path)
 
 	local f = io.open(path, "r")
@@ -111,7 +109,8 @@ function io.exists(path)
 	return false
 end
 
-function io.lines_from(path)
+-- Return table with lines of file
+function io.linesfrom(path)
 	if not io.exists(path) then return {} end
 
 	lines = {}
@@ -123,7 +122,8 @@ function io.lines_from(path)
 	return lines
 end
 
-function io.lines_to(path, lines)
+-- Write lines(table) on file
+function io.linesto(path, lines)
 	local file = io.open(path, "w")
 	
 	for i, v in pairs(lines) do
@@ -134,11 +134,13 @@ function io.lines_to(path, lines)
 	file:close()
 end
 
-function io.contents_from(path)
-	return table.concat(io.lines_from(path), "\n")
+-- Return all content o file
+function io.contentsfrom(path)
+	return table.concat(io.linesfrom(path), "\n")
 end
 
-function io.contents_to(path, contents)
+-- Write content on file
+function io.contentsto(path, contents)
 	local file = io.open(path, "w")
 	
 	file:write(contents)
@@ -147,16 +149,19 @@ function io.contents_to(path, contents)
 	file:close()
 end
 
+-- Alias to coroutine
 function thread(run)
 	coroutine.resume(coroutine.create(run))
 end
 
+-- Force current routine/thread wait
 function sleep(s)
 	local ntime = os.time() + s
 	repeat until os.time() > ntime
 end
 
-function table.index_of(self, val)
+-- Return position indez of value on table
+function table.indexof(self, val)
 	for index, value in pairs(self) do
 		--~ print(index, value, val, value == val, type(val), type(value), #value, #val)
 		if value == val then
@@ -167,7 +172,8 @@ function table.index_of(self, val)
 	return 0
 end
 
+-- Return if table contains the value
 function table.contains(self, val)
-	return table.index_of(self, val) > 0
+	return table.indexof(self, val) > 0
 end
 
